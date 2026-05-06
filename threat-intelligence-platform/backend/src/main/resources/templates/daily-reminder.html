@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Critical Threats Reminder</title>
+</head>
+<body style="font-family: Arial, sans-serif;">
+    <h2 style="color: #d9534f;">Critical Open Threats Reminder</h2>
+    <p>Please review the following open critical threats immediately:</p>
+    <ul>
+        <li th:each="threat : ${threats}">
+            <strong th:text="${threat.title}">Threat Title</strong>
+            <p th:text="${threat.description}">Description</p>
+            <p>Source: <span th:text="${threat.source}">Source</span></p>
+            <hr>
+        </li>
+    </ul>
+</body>
+</html>
