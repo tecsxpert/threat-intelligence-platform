@@ -61,7 +61,7 @@ public class AuthController {
                 .username(signUpRequest.username())
                 .email(signUpRequest.email())
                 .password(passwordEncoder.encode(signUpRequest.password()))
-                .role(User.Role.USER) // Default role
+                .role(User.Role.ADMIN) // Changed to ADMIN for easier internship testing
                 .build();
 
         if (user != null) {

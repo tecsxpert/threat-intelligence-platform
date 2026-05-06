@@ -2,11 +2,29 @@ Given the threat:
 
 {input}
 
-Provide 3 security recommendations in JSON:
-[
-  {
-    "action_type": "",
-    "description": "",
-    "priority": ""
-  }
-]
+Provide exactly 3 security recommendations.
+
+IMPORTANT:
+Return ONLY valid JSON in this format:
+
+{
+  "recommendations": [
+    {
+      "action_type": "",
+      "description": "",
+      "priority": ""
+    },
+    {
+      "action_type": "",
+      "description": "",
+      "priority": ""
+    },
+    {
+      "action_type": "",
+      "description": "",
+      "priority": ""
+    }
+  ]
+}
+
+Do not return explanations or text outside JSON.
