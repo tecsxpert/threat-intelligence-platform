@@ -4,6 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
+
 import jakarta.annotation.PostConstruct;
 
 import java.util.HashMap;
@@ -14,63 +20,95 @@ public class AIServiceClient {
 
     private final RestTemplate restTemplate;
 
-    // Constructor with 10s timeout
     public AIServiceClient() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-
-        // 10 seconds timeout (10000 ms)
         factory.setConnectTimeout(10000);
         factory.setReadTimeout(10000);
-
         this.restTemplate = new RestTemplate(factory);
     }
 
-    
-    // TEST ENDPOINT (GET)
-    
-    public String callAIService() {
+    public Map<String, Object> callAIService() {
+        return callAIServiceWithPrompt("what is ai?");
+    }
+
+    public Map<String, Object> callAIServiceWithPrompt(String prompt) {
         try {
             String url = "http://localhost:5000/test";
 
-            String response = restTemplate.getForObject(url, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer secure-token-123");
 
-            return response;
+            Map<String, String> requestBody = new HashMap<>();
+            requestBody.put("prompt", prompt);
+
+            HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    entity,
+                    (Class<Map<String, Object>>) (Class<?>) Map.class
+            );
+
+            return response.getBody() != null ? response.getBody() : buildError("Empty response from AI service");
+
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            try {
+                String responseBody = e.getResponseBodyAsString();
+
+                Map<String, Object> error = new HashMap<>();
+                error.put("status", "blocked");
+                error.put("message", responseBody);
+
+                return error;
+
+            } catch (Exception ex) {
+                return buildError("Blocked request (sanitizer triggered)");
+            }
 
         } catch (Exception e) {
-            return null; // as per requirement
+            e.printStackTrace();
+            return buildError("Failed to call AI service");
         }
     }
 
-    
-    // RECOMMEND ENDPOINT (POST)
-    
-    public String getRecommendations(String userInput) {
+    public Map<String, Object> getRecommendations(String userInput) {
         try {
             String url = "http://localhost:5000/recommend";
 
-            // Request body
             Map<String, String> request = new HashMap<>();
             request.put("prompt", userInput);
 
-            // POST call
-            String response = restTemplate.postForObject(url, request, String.class);
+            ResponseEntity<Map<String, Object>> response = restTemplate.postForEntity(
+                    url,
+                    request,
+                    (Class<Map<String, Object>>) (Class<?>) Map.class
+            );
 
-            return response;
+            return response.getBody() != null ? response.getBody() : buildError("Empty recommendation response");
 
         } catch (Exception e) {
-            return null; // as per requirement
+            return buildError("Recommendation failed");
         }
     }
 
-    // OPTIONAL TEST (RUN ON START)
+    private Map<String, Object> buildError(String message) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("status", "error");
+        error.put("message", message);
+        return error;
+    }
+
     @PostConstruct
     public void testCall() {
-        String result = callAIService();
-        System.out.println("AI RESPONSE FROM FLASK:");
+
+        Map<String, Object> result = callAIService();
+        System.out.println("AI RESPONSE:");
         System.out.println(result);
 
-        String recommend = getRecommendations("Suggest security improvements");
+        Map<String, Object> recommend = getRecommendations("Suggest security improvements");
         System.out.println("RECOMMEND RESPONSE:");
-        System.out.println(recommend); // will be null until endpoint exists
+        System.out.println(recommend);
     }
 }

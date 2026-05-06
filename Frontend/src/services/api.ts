@@ -14,3 +14,8 @@ export const api = axios.create({
   },
   timeout: 30_000,
 })
+
+export const testAI = async () => {
+  const response = await api.get('/ai/test')
+  return response.data
+}
