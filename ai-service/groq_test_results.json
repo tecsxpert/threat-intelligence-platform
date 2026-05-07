@@ -1,0 +1,20 @@
+[
+  {
+    "endpoint": "/describe",
+    "status": "failure",
+    "is_fallback": true,
+    "message": "Fallback used"
+  },
+  {
+    "endpoint": "/recommend",
+    "status": "failure",
+    "is_fallback": true,
+    "message": "Fallback used"
+  },
+  {
+    "endpoint": "/generate-report",
+    "status": "failure",
+    "is_fallback": true,
+    "message": "Fallback used"
+  }
+]

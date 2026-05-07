@@ -1,0 +1,65 @@
+[
+  {
+    "endpoint": "/health",
+    "input": "",
+    "response_time": 24.14,
+    "cache_used": false,
+    "fallback_used": false,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "SQL injection detected",
+    "response_time": 421.08,
+    "cache_used": false,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "SQL injection detected",
+    "response_time": 435.13,
+    "cache_used": false,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "SQL injection detected",
+    "response_time": 413.78,
+    "cache_used": false,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "SQL injection detected",
+    "response_time": 7.57,
+    "cache_used": true,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "SQL injection detected",
+    "response_time": 6.59,
+    "cache_used": true,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "Fallback test for disabled Groq",
+    "response_time": 435.46,
+    "cache_used": false,
+    "fallback_used": true,
+    "status": "success",
+    "status_code": 200
+  }
+]
