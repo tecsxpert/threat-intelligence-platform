@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from services.groq_client import call_groq
 from services.cache import get_cache, set_cache
 from services.metrics import record_ai_response_time
+from services.fallback_templates import FALLBACK_RECOMMENDATIONS
 from datetime import datetime, timezone
 import json
 import time
@@ -31,25 +32,37 @@ def recommend():
 
     #  FIX: use correct variable
     prompt = load_prompt(user_input)
-
-    #  caching
+    
+    # Check cache first - this is fastest way to respond
     cached_result = get_cache(prompt)
     if cached_result:
         cached_result["cached"] = True
         cached_result["generated_at"] = datetime.now(timezone.utc).isoformat()
         return jsonify(cached_result), 200
 
-    #  AI call + metrics
+    # Call Groq API with 10 second timeout for <2s average response
     start_time = time.time()
-    ai_response = call_groq(prompt)
-    record_ai_response_time(time.time() - start_time)
+    ai_response = call_groq(prompt, timeout=10)
+    response_time = time.time() - start_time
+    record_ai_response_time(response_time)
 
-    if ai_response:
-        ai_response = ai_response.strip()
-        ai_response = ai_response.replace("```json", "").replace("```", "").strip()
+    # If Groq failed, return fallback response with is_fallback=True
+    if not ai_response['success']:
+        fallback_result = {
+            "recommendations": FALLBACK_RECOMMENDATIONS,  # Use fallback template
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "is_fallback": True,
+            "error_reason": ai_response['error']
+        }
+        set_cache(prompt, fallback_result)
+        return jsonify(fallback_result), 200  # Return 200 with fallback, not 500
+
+    # If Groq succeeded, try to parse JSON
+    ai_content = ai_response['content'].strip()
+    ai_content = ai_content.replace("```json", "").replace("```", "").strip()
 
     try:
-        recommendations = json.loads(ai_response)
+        recommendations = json.loads(ai_content)
 
         if not isinstance(recommendations, list):
             raise ValueError("Invalid AI response format")
@@ -60,34 +73,18 @@ def recommend():
             "is_fallback": False
         }
 
-        set_cache(prompt, {
-            "recommendations": recommendations[:3],
-            "is_fallback": False
-        })
-
+        set_cache(prompt, result)
         return jsonify(result), 200
 
     except Exception as e:
-        print("AI ERROR:", str(e))
-
-        return jsonify({
-            "recommendations": [
-                {
-                    "action_type": "monitor",
-                    "description": "Fallback: Monitor system logs",
-                    "priority": "high"
-                },
-                {
-                    "action_type": "alert",
-                    "description": "Fallback: Notify admin",
-                    "priority": "medium"
-                },
-                {
-                    "action_type": "patch",
-                    "description": "Fallback: Apply updates",
-                    "priority": "low"
-                }
-            ],
+        # If JSON parsing fails, return fallback response
+        print("RECOMMEND AI PARSE ERROR:", str(e))
+        
+        fallback_result = {
+            "recommendations": FALLBACK_RECOMMENDATIONS,
             "generated_at": datetime.now(timezone.utc).isoformat(),
-            "is_fallback": True
-        }), 200
+            "is_fallback": True,
+            "parse_error": str(e)
+        }
+        set_cache(prompt, fallback_result)
+        return jsonify(fallback_result), 200

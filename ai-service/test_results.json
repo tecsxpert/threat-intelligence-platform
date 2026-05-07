@@ -1,0 +1,135 @@
+[
+  {
+    "endpoint": "/health",
+    "input": "",
+    "response_time": 28.79,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "SQL injection detected",
+    "response_time": 18813.6,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "SQL injection detected",
+    "response_time": 11012.56,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "SQL injection detected",
+    "response_time": 11528.77,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "XSS attack detected",
+    "response_time": 6427.73,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "XSS attack detected",
+    "response_time": 10896.55,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "XSS attack detected",
+    "response_time": 12.18,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "Phishing email reported",
+    "response_time": 7952.43,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "Phishing email reported",
+    "response_time": 12359.34,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "Phishing email reported",
+    "response_time": 10.4,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "Open port exposed",
+    "response_time": 13137.33,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "Open port exposed",
+    "response_time": 6847.31,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "Open port exposed",
+    "response_time": 16.37,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "Weak password found",
+    "response_time": 10361.29,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "Weak password found",
+    "response_time": 4188.03,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "Weak password found",
+    "response_time": 18.02,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/describe",
+    "input": "Ransomware activity detected",
+    "response_time": 4910.57,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/recommend",
+    "input": "Ransomware activity detected",
+    "response_time": 8920.58,
+    "status": "success",
+    "status_code": 200
+  },
+  {
+    "endpoint": "/generate-report",
+    "input": "Ransomware activity detected",
+    "response_time": 17.06,
+    "status": "success",
+    "status_code": 200
+  }
+]

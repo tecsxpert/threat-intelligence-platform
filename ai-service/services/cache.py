@@ -1,13 +1,16 @@
 import redis
 import hashlib
 import json
+import os
 
 # Connect to Redis
 redis_client = redis.Redis(
-    host="localhost",
-    port=6379,
+    host=os.getenv("REDIS_HOST", "localhost"),
+    port=int(os.getenv("REDIS_PORT", 6379)),
     db=0,
-    decode_responses=True
+    decode_responses=True,
+    socket_connect_timeout=0.2,
+    socket_timeout=0.2
 )
 
 TTL_SECONDS = 900  # 15 minutes
